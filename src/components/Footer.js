@@ -1,7 +1,7 @@
 import React from 'react';
 
 // import logo footer
-import Logo from '../assets/images/logo-footer.svg';
+import {ReactComponent as Logo} from '../assets/images/logo-footer.svg';
 
 function Footer() {
     return (
@@ -9,7 +9,7 @@ function Footer() {
             <div className='container mx-auto px-3 py-6 flex gap-6 flex-wrap'>
                 {/* figure logo */}
                 <figure>
-                    <img src={Logo} alt='logo footer'/>
+                    <Logo/>
                 </figure>
 
                 {/* title */}

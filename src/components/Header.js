@@ -2,7 +2,7 @@ import React from 'react';
 import {Link, useLocation} from 'react-router-dom';
 
 // import logo svg
-import Logo from '../assets/images/logo.svg';
+import {ReactComponent as Logo} from '../assets/images/logo.svg';
 
 // import cart shop icon react ioicon 4
 import { IoIosCart } from 'react-icons/io';
@@ -16,9 +16,7 @@ function Header() {
             <div className='container mx-auto px-3 flex items-center justify-between gap-6'>
                 {/* logo */}
                 <Link to='/'>
-                    <figure>
-                        <img src={Logo} alt='logo'/>
-                    </figure>
+                    <Logo/>
                 </Link>
 
                 {/* icon cart shop */}
