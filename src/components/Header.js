@@ -12,7 +12,7 @@ function Header() {
     const {pathname} = useLocation();
 
     return (
-        <header id='header' className='h-14 flex items-center bg-gray-800 fixed w-full'>
+        <header id='header' className='h-14 flex items-center bg-zinc-900 fixed w-full'>
             <div className='container mx-auto px-3 flex items-center justify-between gap-6'>
                 {/* logo */}
                 <Link to='/'>
