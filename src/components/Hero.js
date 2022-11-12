@@ -5,7 +5,7 @@ import { IoIosArrowDropright } from 'react-icons/io';
 
 function Hero() {
   return (
-    <div id='hero' className='grid grid-cols-1 sm:grid-cols-2 gap-6 gap-y-10'>
+    <div className='hero grid grid-cols-1 sm:grid-cols-2 gap-6 gap-y-10'>
         {/* text */}
         <div className='text-hero'>
             <h1 className='font-bold text-5xl sm:text-7xl mb-16'>The easiest way to buy Photos as NFT.</h1>
