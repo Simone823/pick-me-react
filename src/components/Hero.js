@@ -8,7 +8,7 @@ function Hero() {
     <div className='hero grid grid-cols-1 sm:grid-cols-2 gap-6 gap-y-10'>
         {/* text */}
         <div className='text-hero'>
-            <h1 className='font-bold text-5xl sm:text-7xl mb-16'>Il modo più semplice per acquistare foto come NFT.</h1>
+            <h1 className='font-bold text-5xl md:text-6xl  mb-16'>Il modo più semplice per acquistare foto come NFT.</h1>
             <a href='/' className='font-semibold text-4xl text-pink-500 hover:text-violet-500 duration-300 flex items-center gap-4 flex-wrap max-w-max'>
                 Inizia Ora
                 <IoIosArrowDropright className='self-end'/>
