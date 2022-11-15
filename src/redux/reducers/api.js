@@ -10,7 +10,11 @@ const initialState = {
         status: false,
         message: ''
     },
-    photos: []
+    photos: [],
+    rateLimit: {
+        remaining: undefined,
+        total: undefined
+    }
 };
 
 // api slice
@@ -36,21 +40,29 @@ const apiSlice = createSlice({
         errorCatch: (state, action) => {
             state.error.status = true;
             state.error.message = action.payload;
+        },
+
+        rateLimiter: (state, action) => {
+            state.rateLimit = {...action.payload};
         }
     }
 });
 
 // actions apiSlice
-const { startLoading, stopLoading, saveData, errorCatch } = apiSlice.actions;
+const { startLoading, stopLoading, saveData, errorCatch, rateLimiter } = apiSlice.actions;
 
 // fetch data api
 const fetchData = (path) => (dispatch) => {
     dispatch(startLoading);
-    
+
     // intance get
     instance.get(path)
     .then((res) => {
         dispatch(saveData(res.data));
+        dispatch(rateLimiter({
+            remaining: res.headers['x-ratelimit-limit'],
+            total: res.headers['x-ratelimit-remaining']
+        }));
         dispatch(stopLoading());
     })
     .catch((err) => {
