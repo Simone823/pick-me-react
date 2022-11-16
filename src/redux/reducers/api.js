@@ -60,8 +60,8 @@ const fetchData = (path) => (dispatch) => {
     .then((res) => {
         dispatch(saveData(res.data));
         dispatch(rateLimiter({
-            remaining: res.headers['x-ratelimit-limit'],
-            total: res.headers['x-ratelimit-remaining']
+            total: res.headers['x-ratelimit-limit'],
+            remaining: res.headers['x-ratelimit-remaining']
         }));
         dispatch(stopLoading());
     })
