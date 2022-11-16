@@ -4,7 +4,17 @@ module.exports = {
     "./src/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      animation: {
+        rotateInfinite: 'rotateInfinite 1s linear infinite',
+      },
+      keyframes: {
+        rotateInfinite: {
+          'from': { transform: 'rotate(0deg)' },
+          'to': { transform: 'rotate(360deg)' },
+        }
+      }
+    },
   },
   plugins: [],
 }
