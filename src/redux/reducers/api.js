@@ -66,7 +66,7 @@ const fetchData = (path) => (dispatch) => {
         dispatch(stopLoading());
     })
     .catch((err) => {
-        dispatch(errorCatch(err.errors));
+        dispatch(errorCatch(err.message));
         dispatch(stopLoading());
     })
 }
