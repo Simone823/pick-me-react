@@ -35,19 +35,12 @@ function Homepage() {
     const dispatch = useDispatch();
 
     // serach query input
-    const [inputQuery, setInputQuery] = useState('');
+    const [inputQuery, setInputQuery] = useState('nft');
 
     // fecth photos custom
-    const fecthPhotos = (type = 'default', page = 1)  => {
+    const fecthPhotos = (page = 1)  => {
         // url
-        let url;
-
-        // type check
-        if(type === 'default') {
-            url = '/search/photos?query=nft&';
-        } else if(type === 'search') {
-            url = `/search/photos?query=${inputQuery.trim().toLowerCase()}&`;
-        }
+        const url = `/search/photos?query=${inputQuery.trim().toLowerCase()}&`;;
 
         // set query redux photos
         dispatch(setQuery(`${url}per_page=24&page=${page}`));
@@ -58,12 +51,12 @@ function Homepage() {
 
     // reset current page on click search btn
     const searchPhoto = () => (e) => {
-        fecthPhotos('search');
+        fecthPhotos();
     }
 
     // useeffect one render feth data
     useEffect(()=> {
-        fecthPhotos('default');
+        fecthPhotos();
     }, []);
 
     return (
@@ -99,6 +92,17 @@ function Homepage() {
                                 return <Photo id={photo.id} image={photo.urls['regular']} price={photo.likes} key={photo.id}/>
                             })}
                         </div>
+
+                        {/* pagination */}
+                        {pagination.total_pages > 0 ? (
+                            < div className={`pagination flex items-center ${pagination.currentPage === 1 ? 'justify-end' : 'justify-between'} mt-10`}>
+                                {/* prev */}
+                                <button className={`${pagination.currentPage > 1 ? 'block' : 'hidden'} rounded-full py-2 px-3 border-2 border-pink-500 text-pink-500 hover:border-violet-500 hover:text-violet-500 duration-300`} type='button'>Indietro</button>
+
+                                {/* next */}
+                                <button className={`rounded-full py-2 px-3 border-2 border-pink-500 text-pink-500 hover:border-violet-500 hover:text-violet-500 duration-300`} type='button'>Avanti</button>
+                            </div>
+                        ) : ''}
                     </>
                 ) : !loading && error.status ? (
                     <Error message={error.message}/>
