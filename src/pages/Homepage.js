@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 
 // react redux hook
 import {useDispatch, useSelector} from 'react-redux';
@@ -22,22 +22,52 @@ import Photo from '../components/Photo';
 import { IoIosImages } from 'react-icons/io';
 
 // import fetch data redux reducers api
-import {fetchData} from '../redux/reducers/api';
+import {fetchData, setQuery} from '../redux/reducers/api';
 
 function Homepage() {
     // use title doc
     useTitle('Homepage');
 
+    // get value state photos redux
+    const { loading, error, photos, rateLimit } = useSelector((state) => state.photos);
+
     // dispatch redux
     const dispatch = useDispatch();
 
+    // serach query input
+    const [inputQuery, setInputQuery] = useState('');
+
+    // fecth photos custom
+    const fecthPhotos = (type = 'default', page = 1) => {
+        // url
+        let url;
+
+        if(type === 'default') {
+            url = '/search/photos?query=nft&';
+        } else if(type === 'search') {
+            if(inputQuery.length > 0) {
+                url = `/search/photos?query=${inputQuery.trim().toLowerCase()}&`;
+            } else {
+                return;
+            }
+        }
+
+        // set query redux photos
+        dispatch(setQuery(url));
+
+        // fetch data
+        dispatch(fetchData(`${url}per_page=24&page=${page}`));
+    }
+
+    // serach photo
+    const searchPhoto = () => (e) => {
+        fecthPhotos('search');
+    }
+
     // useeffect one render feth data
     useEffect(()=> {
-        dispatch(fetchData('photos'));
+        fecthPhotos('default');
     }, []);
-
-    // get value state photos redux
-    const {loading, error, photos, rateLimit} = useSelector((state) => state.photos);
 
     return (
         <section id='home'>
@@ -53,8 +83,8 @@ function Homepage() {
                     <div className='wrapper flex items-center justify-between flex-wrap gap-3'>
                         {/* input search photo */}
                         <div className='relative max-w-max'>
-                            <input className='pr-10 rounded-full text-md bg-transparent text-gray-400 py-2 px-3 border-2 border-gray-500 focus-visible:outline-none' id='photos' name='photos' placeholder='Cerca la tua foto' required/>
-                            <IoIosImages className='absolute top-2/4 -translate-y-2/4 right-4 cursor-pointer text-gray-400 hover:text-violet-500 duration-300'/>
+                            <input onChange={(e) => setInputQuery(e.target.value)} value={inputQuery} className='pr-10 rounded-full text-md bg-transparent text-gray-400 py-2 px-3 border-2 border-gray-500 focus-visible:outline-none' id='photos' name='photos' placeholder='Cerca la tua foto'/>
+                            <IoIosImages onClick={searchPhoto()} className='absolute top-2/4 -translate-y-2/4 right-4 cursor-pointer text-gray-400 hover:text-violet-500 duration-300'/>
                         </div>
 
                         {/* request rate limit*/}
