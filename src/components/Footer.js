@@ -15,7 +15,7 @@ function Footer() {
                 {/* title */}
                 <div className='title flex flex-col justify-between'>
                     <h5>pick me</h5>
-                    <a href='https://simonedaglio.web.app/' className='text-sm text-gray-100 font-semibold hover:text-violet-500 duration-300'>@Simone Daglio</a>
+                    <p className='text-sm text-gray-400 font-semibold'>Store NFT photo react</p>
                 </div>
             </div>
         </footer>
