@@ -22,14 +22,14 @@ import Photo from '../components/Photo';
 import { IoIosImages } from 'react-icons/io';
 
 // import fetch data redux reducers api
-import {fetchData, setQuery} from '../redux/reducers/api';
+import { fetchData, setQuery} from '../redux/reducers/api';
 
 function Homepage() {
     // use title doc
     useTitle('Homepage');
 
     // get value state photos redux
-    const { loading, error, photos, rateLimit } = useSelector((state) => state.photos);
+    const { loading, error, photos, rateLimit, pagination } = useSelector((state) => state.photos);
 
     // dispatch redux
     const dispatch = useDispatch();
@@ -38,28 +38,25 @@ function Homepage() {
     const [inputQuery, setInputQuery] = useState('');
 
     // fecth photos custom
-    const fecthPhotos = (type = 'default', page = 1) => {
+    const fecthPhotos = (type = 'default', page = 1)  => {
         // url
         let url;
 
+        // type check
         if(type === 'default') {
             url = '/search/photos?query=nft&';
         } else if(type === 'search') {
-            if(inputQuery.length > 0) {
-                url = `/search/photos?query=${inputQuery.trim().toLowerCase()}&`;
-            } else {
-                return;
-            }
+            url = `/search/photos?query=${inputQuery.trim().toLowerCase()}&`;
         }
 
         // set query redux photos
-        dispatch(setQuery(url));
+        dispatch(setQuery(`${url}per_page=24&page=${page}`));
 
         // fetch data
         dispatch(fetchData(`${url}per_page=24&page=${page}`));
     }
 
-    // serach photo
+    // reset current page on click search btn
     const searchPhoto = () => (e) => {
         fecthPhotos('search');
     }
@@ -96,11 +93,13 @@ function Homepage() {
 
                 {/* check value state photos */}
                 {!loading && !error.status ? (
-                    <div className='photos-wrapper grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-10 place-items-center'>
-                        {photos.map((photo) => {
-                            return <Photo id={photo.id} image={photo.urls['regular']} price={photo.likes} key={photo.id}/>
-                        })}
-                    </div>
+                    <>
+                        <div className='photos-wrapper grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-10 place-items-center'>
+                            {photos.map((photo) => {
+                                return <Photo id={photo.id} image={photo.urls['regular']} price={photo.likes} key={photo.id}/>
+                            })}
+                        </div>
+                    </>
                 ) : !loading && error.status ? (
                     <Error message={error.message}/>
                 ) : (
