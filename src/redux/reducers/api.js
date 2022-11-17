@@ -14,7 +14,8 @@ const initialState = {
     rateLimit: {
         remaining: undefined,
         total: undefined
-    }
+    },
+    query: ''
 };
 
 // api slice
@@ -44,21 +45,31 @@ const apiSlice = createSlice({
 
         rateLimiter: (state, action) => {
             state.rateLimit = {...action.payload};
+        },
+
+        setQuery: (state, action) => {
+            state.query = action.payload;
         }
     }
 });
 
 // actions apiSlice
-const { startLoading, stopLoading, saveData, errorCatch, rateLimiter } = apiSlice.actions;
+const { startLoading, stopLoading, saveData, errorCatch, rateLimiter, setQuery } = apiSlice.actions;
 
 // fetch data api
 const fetchData = (path) => (dispatch) => {
-    dispatch(startLoading);
+    // reset
+    dispatch(startLoading());
 
     // intance get
     instance.get(path)
     .then((res) => {
-        dispatch(saveData(res.data));
+        // controllo se esiste res, data dopiche se la lunghezza di results è 0 dispatch error 
+        if(res?.data?.results.length === 0) {
+            dispatch(errorCatch('Errore! Nessuna foto trovata'));
+        }
+
+        dispatch(saveData(res.data.results));
         dispatch(rateLimiter({
             total: res.headers['x-ratelimit-limit'],
             remaining: res.headers['x-ratelimit-remaining']
@@ -70,7 +81,7 @@ const fetchData = (path) => (dispatch) => {
         dispatch(stopLoading());
     })
 }
-export {fetchData};
+export {fetchData, setQuery};
 
 // export reducers apiSlice
 const {reducer} = apiSlice;
