@@ -53,6 +53,9 @@ function Homepage() {
     const searchPhoto = () => (e) => {
         // reset current page
         dispatch(resetPage());
+
+        // fecth photos
+        fecthPhotos();
     }
 
     // useeffect one render feth data
