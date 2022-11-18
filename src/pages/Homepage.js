@@ -60,7 +60,7 @@ function Homepage() {
 
     // prev page
     const prevPage = () => (e) => {
-        if(pagination.currentPage - 1 != 0) {
+        if(pagination.currentPage - 1 !== 0) {
             fecthPhotos(pagination.currentPage - 1);
         } else {
             return;
