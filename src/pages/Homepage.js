@@ -22,7 +22,7 @@ import Photo from '../components/Photo';
 import { IoIosImages } from 'react-icons/io';
 
 // import fetch data redux reducers api
-import { fetchData, setQuery} from '../redux/reducers/api';
+import { fetchData, setQuery, resetPage, nextPage, prevPage } from '../redux/reducers/api';
 
 function Homepage() {
     // use title doc
@@ -49,15 +49,22 @@ function Homepage() {
         dispatch(fetchData(`${url}per_page=24&page=${page}`));
     }
 
-    // reset current page on click search btn
+    // search photo
     const searchPhoto = () => (e) => {
-        fecthPhotos();
+        // reset current page
+        dispatch(resetPage());
     }
 
     // useeffect one render feth data
     useEffect(()=> {
         fecthPhotos();
     }, []);
+
+    // useeffect one render feth data
+    useEffect(() => {
+        fecthPhotos(pagination.currentPage);
+    }, [pagination.currentPage]);
+
 
     return (
         <section id='home'>
@@ -97,10 +104,10 @@ function Homepage() {
                         {pagination.total_pages > 0 ? (
                             < div className={`pagination flex items-center ${pagination.currentPage === 1 ? 'justify-end' : 'justify-between'} mt-10`}>
                                 {/* prev */}
-                                <button className={`${pagination.currentPage > 1 ? 'block' : 'hidden'} rounded-full py-2 px-3 border-2 border-pink-500 text-pink-500 hover:border-violet-500 hover:text-violet-500 duration-300`} type='button'>Indietro</button>
+                                <button onClick={() => dispatch(prevPage())} className={`${pagination.currentPage > 1 ? 'block' : 'hidden'} rounded-full py-2 px-3 border-2 border-pink-500 text-pink-500 hover:border-violet-500 hover:text-violet-500 duration-300`} type='button'>Indietro</button>
 
                                 {/* next */}
-                                <button className={`rounded-full py-2 px-3 border-2 border-pink-500 text-pink-500 hover:border-violet-500 hover:text-violet-500 duration-300`} type='button'>Avanti</button>
+                                <button onClick={() => dispatch(nextPage())} className={`${pagination.currentPage === pagination.total_pages ? 'hidden' : ''} rounded-full py-2 px-3 border-2 border-pink-500 text-pink-500 hover:border-violet-500 hover:text-violet-500 duration-300`} type='button'>Avanti</button>
                             </div>
                         ) : ''}
                     </>
