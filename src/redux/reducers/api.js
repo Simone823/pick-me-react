@@ -15,7 +15,12 @@ const initialState = {
         remaining: undefined,
         total: undefined
     },
-    query: ''
+    query: '',
+    pagination: {
+        total: null,
+        total_pages: null,
+        currentPage: 1,
+    }
 };
 
 // api slice
@@ -35,7 +40,9 @@ const apiSlice = createSlice({
         },
 
         saveData: (state, action) => {
-            state.photos = action.payload;
+            state.photos = action.payload.photos;
+            state.pagination.total = action.payload.total;
+            state.pagination.total_pages = action.payload.total_pages
         },
 
         errorCatch: (state, action) => {
@@ -49,12 +56,32 @@ const apiSlice = createSlice({
 
         setQuery: (state, action) => {
             state.query = action.payload;
+        },
+
+        resetPage: (state) => {
+            state.pagination.currentPage = 1;
+        },
+
+        nextPage: (state) => {
+            if(state.pagination.currentPage + 1 <= state.pagination.total_pages) {
+                state.pagination.currentPage = state.pagination.currentPage + 1;
+            } else {
+                return;
+            }
+        },
+
+        prevPage: (state) => {
+            if(state.pagination.currentPage - 1 >= 1) {
+                state.pagination.currentPage = state.pagination.currentPage - 1;
+            } else {
+                return;
+            }
         }
     }
 });
 
 // actions apiSlice
-const { startLoading, stopLoading, saveData, errorCatch, rateLimiter, setQuery } = apiSlice.actions;
+const { startLoading, stopLoading, saveData, errorCatch, rateLimiter, setQuery, resetPage, nextPage, prevPage } = apiSlice.actions;
 
 // fetch data api
 const fetchData = (path) => (dispatch) => {
@@ -69,11 +96,20 @@ const fetchData = (path) => (dispatch) => {
             dispatch(errorCatch('Errore! Nessuna foto trovata'));
         }
 
-        dispatch(saveData(res.data.results));
+        // save data
+        dispatch(saveData({
+            photos: res.data.results,
+            total: res.data.total,
+            total_pages: res.data.total_pages
+        }));
+
+        // ratelimiter
         dispatch(rateLimiter({
             total: res.headers['x-ratelimit-limit'],
             remaining: res.headers['x-ratelimit-remaining']
         }));
+
+        // stop loading
         dispatch(stopLoading());
     })
     .catch((err) => {
@@ -81,7 +117,9 @@ const fetchData = (path) => (dispatch) => {
         dispatch(stopLoading());
     })
 }
-export {fetchData, setQuery};
+
+// exports
+export { fetchData, setQuery, resetPage, nextPage, prevPage };
 
 // export reducers apiSlice
 const {reducer} = apiSlice;
