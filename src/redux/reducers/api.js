@@ -33,6 +33,8 @@ const apiSlice = createSlice({
             state.error.status = false;
             state.error.message = "";
             state.photos = [];
+            state.pagination.total = null;
+            state.pagination.total_pages = null;
         },
 
         stopLoading: (state) => {
@@ -42,7 +44,7 @@ const apiSlice = createSlice({
         saveData: (state, action) => {
             state.photos = action.payload.photos;
             state.pagination.total = action.payload.total;
-            state.pagination.total_pages = action.payload.total_pages
+            state.pagination.total_pages = action.payload.total_pages;
         },
 
         errorCatch: (state, action) => {
@@ -58,30 +60,14 @@ const apiSlice = createSlice({
             state.query = action.payload;
         },
 
-        resetPage: (state) => {
-            state.pagination.currentPage = 1;
-        },
-
-        nextPage: (state) => {
-            if(state.pagination.currentPage + 1 <= state.pagination.total_pages) {
-                state.pagination.currentPage = state.pagination.currentPage + 1;
-            } else {
-                return;
-            }
-        },
-
-        prevPage: (state) => {
-            if(state.pagination.currentPage - 1 >= 1) {
-                state.pagination.currentPage = state.pagination.currentPage - 1;
-            } else {
-                return;
-            }
+        updatCurrentPage: (state, action) => {
+            state.pagination.currentPage = action.payload;
         }
     }
 });
 
 // actions apiSlice
-const { startLoading, stopLoading, saveData, errorCatch, rateLimiter, setQuery, resetPage, nextPage, prevPage } = apiSlice.actions;
+const { startLoading, stopLoading, saveData, errorCatch, rateLimiter, setQuery, updatCurrentPage } = apiSlice.actions;
 
 // fetch data api
 const fetchData = (path) => (dispatch) => {
@@ -119,7 +105,7 @@ const fetchData = (path) => (dispatch) => {
 }
 
 // exports
-export { fetchData, setQuery, resetPage, nextPage, prevPage };
+export { fetchData, setQuery, updatCurrentPage };
 
 // export reducers apiSlice
 const {reducer} = apiSlice;
