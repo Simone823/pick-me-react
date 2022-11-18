@@ -22,7 +22,7 @@ import Photo from '../components/Photo';
 import { IoIosImages } from 'react-icons/io';
 
 // import fetch data redux reducers api
-import { fetchData, setQuery, resetPage, nextPage, prevPage } from '../redux/reducers/api';
+import { fetchData, setQuery, updatCurrentPage } from '../redux/reducers/api';
 
 function Homepage() {
     // use title doc
@@ -45,29 +45,41 @@ function Homepage() {
         // set query redux photos
         dispatch(setQuery(`${url}per_page=24&page=${page}`));
 
+        // update current page redux
+        dispatch(updatCurrentPage(page));
+
         // fetch data
         dispatch(fetchData(`${url}per_page=24&page=${page}`));
     }
 
     // search photo
     const searchPhoto = () => (e) => {
-        // reset current page
-        dispatch(resetPage());
-
         // fecth photos
         fecthPhotos();
+    }
+
+    // prev page
+    const prevPage = () => (e) => {
+        if(pagination.currentPage - 1 != 0) {
+            fecthPhotos(pagination.currentPage - 1);
+        } else {
+            return;
+        }
+    }
+
+    // next page
+    const nextPage = () => (e) => {
+        if(pagination.currentPage + 1 <= pagination.total_pages) {
+            fecthPhotos(pagination.currentPage + 1);
+        } else {
+            return;
+        }
     }
 
     // useeffect one render feth data
     useEffect(()=> {
         fecthPhotos();
     }, []);
-
-    // useeffect one render feth data
-    useEffect(() => {
-        fecthPhotos(pagination.currentPage);
-    }, [pagination.currentPage]);
-
 
     return (
         <section id='home'>
@@ -107,10 +119,10 @@ function Homepage() {
                         {pagination.total_pages > 0 ? (
                             < div className={`pagination flex items-center ${pagination.currentPage === 1 ? 'justify-end' : 'justify-between'} mt-10`}>
                                 {/* prev */}
-                                <button onClick={() => dispatch(prevPage())} className={`${pagination.currentPage > 1 ? 'block' : 'hidden'} rounded-full py-2 px-3 border-2 border-pink-500 text-pink-500 hover:border-violet-500 hover:text-violet-500 duration-300`} type='button'>Indietro</button>
+                                <button onClick={prevPage()} className={`${pagination.currentPage > 1 ? 'block' : 'hidden'} rounded-full py-2 px-3 border-2 border-pink-500 text-pink-500 hover:border-violet-500 hover:text-violet-500 duration-300`} type='button'>Indietro</button>
 
                                 {/* next */}
-                                <button onClick={() => dispatch(nextPage())} className={`${pagination.currentPage === pagination.total_pages ? 'hidden' : ''} rounded-full py-2 px-3 border-2 border-pink-500 text-pink-500 hover:border-violet-500 hover:text-violet-500 duration-300`} type='button'>Avanti</button>
+                                <button onClick={nextPage()} className={`${pagination.currentPage === pagination.total_pages ? 'hidden' : ''} rounded-full py-2 px-3 border-2 border-pink-500 text-pink-500 hover:border-violet-500 hover:text-violet-500 duration-300`} type='button'>Avanti</button>
                             </div>
                         ) : ''}
                     </>
