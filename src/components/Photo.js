@@ -4,7 +4,16 @@ import '../assets/css/components/photo.css';
 // import cart shop icon
 import { IoMdCart } from 'react-icons/io';
 
-function Photo({id, image, price}) {
+// react redux hook
+import { useDispatch } from 'react-redux';
+
+// import add to cart reducer cart
+import { addToCart } from '../redux/reducers/cart';
+
+function Photo({item, id, image, price}) {
+  // dispatch redux
+  const dispatch = useDispatch();
+
   return (
     <div className='card-photo relative w-full max-w-sm h-80 overflow-hidden cursor-pointer'>
       {/* image */}
@@ -19,7 +28,7 @@ function Photo({id, image, price}) {
           <p className='font-bold'>{price} &euro;</p>
 
           {/* btn add to cart */}
-          <button type='button' className='p-2 rounded-full bg-pink-500 text-xl text-white hover:bg-violet-500 duration-300'>
+          <button onClick={() => dispatch(addToCart(item))} type='button' className='p-2 rounded-full bg-pink-500 text-xl text-white hover:bg-violet-500 duration-300'>
             <IoMdCart/>
           </button>
         </div>
