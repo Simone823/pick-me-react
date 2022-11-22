@@ -6,7 +6,7 @@ module.exports = {
   theme: {
     extend: {
       maxWidth: {
-        'xxs': '220px',
+        'xxxs': '180px',
       },
       animation: {
         rotateInfinite: 'rotateInfinite 1s linear infinite',

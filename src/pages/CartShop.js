@@ -44,7 +44,7 @@ function CartShop() {
                 return(
                   <div className='item flex gap-4 flex-wrap mb-6' key={item.id}>
                     {/* img */}
-                    <figure className='max-w-xxs w-full h-36'>
+                    <figure className='max-w-xxxs w-full h-28'>
                       <img className='w-full object-cover object-center rounded-md' src={item.urls['regular']} alt={item.id}/>
                     </figure>
 
