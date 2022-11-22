@@ -1,10 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 // localStorage
-if(!localStorage.getItem('cart')) {
+if(!localStorage.getItem('cart') && !localStorage.getItem('total')) {
     localStorage.setItem('cart', '[]');
-} else if(!localStorage.getItem('total')) {
-    localStorage.setItem('total', 0);
+    localStorage.setItem('total', '0');
 }
 
 // initial state
