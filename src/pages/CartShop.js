@@ -32,7 +32,7 @@ function CartShop() {
         <h1 className='text-2xl sm:text-6xl font-bold mb-20'>Carrello</h1>
 
         {cart.length > 0 ? (
-          <div className='wrapper grid grid-cols-1 sm:grid-cols-2'>
+          <div className='wrapper grid grid-cols-1 md:grid-cols-2 gap-x-32 gap-y-12'>
             {/* items cart col */}
             <div className='cart-items'>
               {/* btn remove all to cart */}
@@ -42,7 +42,7 @@ function CartShop() {
 
               {cart.map((item) => {
                 return(
-                  <div className='item flex gap-4 flex-wrap mb-6' key={item.id}>
+                  <div className='item flex gap-6 flex-wrap mb-10' key={item.id}>
                     {/* img */}
                     <figure className='max-w-xxxs w-full h-28'>
                       <img className='w-full object-cover object-center rounded-md' src={item.urls['regular']} alt={item.id}/>
@@ -66,6 +66,42 @@ function CartShop() {
                   </div>
                 )
               })}
+            </div>
+
+            {/* form wrapper */}
+            <div className='form-wrapper h-max border-2 border-gray-500 rounded-lg py-10 px-8 bg-black/60'>
+              <h2 className='font-bold text-xl mb-8'>Dati Pagamento</h2>
+
+              {/* form */}
+              <form>
+                {/* name surname */}
+                <div className='form-group grid grid-cols-1 md:grid-cols-2 gap-6 mb-8'> 
+                  <input type='text' className='rounded-full border-2 max-w-full border-gray-500 bg-transparent py-2 px-4 text-gray-300 focus-visible:outline-none' id='name' name='name' placeholder='Nome' required minLength='3' maxLength='30'/>
+                  <input type='text' className='rounded-full border-2 max-w-full border-gray-500 bg-transparent py-2 px-4 text-gray-300 focus-visible:outline-none' id='surname' name='surname' placeholder='Cognome' required minLength='3' maxLength='3'/>
+                </div>
+
+                {/* credit number */}
+                <div className='form-group mb-8'>
+                  <input type='number' className='rounded-full border-2 w-full border-gray-500 bg-transparent py-2 px-4 text-gray-300 focus-visible:outline-none' id='card' name='card' placeholder='Numero carta di credito' required/>
+                </div>
+
+                {/* address, n address, cap */}
+                <div className='form-group grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8'>
+                  <input type='text' className='rounded-full border-2 max-w-full border-gray-500 bg-transparent py-2 px-4 text-gray-300 focus-visible:outline-none' id='address' name='address' placeholder='Indirizzo' required/>
+                  <input type='number' className='rounded-full border-2 max-w-full border-gray-500 bg-transparent py-2 px-4 text-gray-300 focus-visible:outline-none' id='civic' name='civic' placeholder='N° Civico' required/>
+                  <input type='number' className='rounded-full border-2 max-w-full border-gray-500 bg-transparent py-2 px-4 text-gray-300 focus-visible:outline-none' id='cap' name='cap' placeholder='CAP' required/>
+                </div>
+
+                {/* total nd btn submit */}
+                <div className='detail-submit flex items-center justify-between flex-wrap gap-4'>
+                  <h4 className='font-bold text-2xl'>{total} &euro;</h4>
+
+                  {/* submit */}
+                  <button className='rounded-full bg-gray-300 py-2 px-6 font-bold text-black hover:bg-gray-400 duration-300' type='submit'>
+                    Procedi all'acquisto
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
         ) : (
