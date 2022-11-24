@@ -15,6 +15,9 @@ import { useSelector, useDispatch } from 'react-redux';
 // import remove to cart redux cart
 import { removeToCart, removeAllToCart } from '../redux/reducers/cart';
 
+// import formik
+import {Formik} from 'formik';
+
 function CartShop() {
   // use title custom hook
   useTitle('Carrello');
@@ -24,6 +27,16 @@ function CartShop() {
 
   // dispatch redux
   const dispatch = useDispatch();
+
+  // initial value form
+  const form = {
+    name: '',
+    surname: '',
+    card: '',
+    address: '',
+    civic: '',
+    cap: '',
+  }
 
   return (
     <section id='cart-shop'>
@@ -73,35 +86,51 @@ function CartShop() {
               <h2 className='font-bold text-xl mb-8'>Dati Pagamento</h2>
 
               {/* form */}
-              <form>
-                {/* name surname */}
-                <div className='form-group grid grid-cols-1 md:grid-cols-2 gap-6 mb-8'> 
-                  <input type='text' className='rounded-full border-2 max-w-full border-gray-500 bg-transparent py-2 px-4 text-gray-300 focus-visible:outline-none' id='name' name='name' placeholder='Nome' required minLength='3' maxLength='30'/>
-                  <input type='text' className='rounded-full border-2 max-w-full border-gray-500 bg-transparent py-2 px-4 text-gray-300 focus-visible:outline-none' id='surname' name='surname' placeholder='Cognome' required minLength='3' maxLength='3'/>
-                </div>
+              <Formik
+                initialValues={form}
+                onSubmit={(values, actions) => {
+                  setTimeout(() => {
+                    alert(JSON.stringify(values, null, 2));
+                    actions.setSubmitting(true);
+                    actions.resetForm(form);
+                  }, 500);
+                }}
+              >
+                {props => (
+                  <form onSubmit={props.handleSubmit}>
+                    {/* Name */}
+                    <div className='form-group grid grid-cols-1 md:grid-cols-2 gap-6 mb-8'>
+                      <input onBlur={props.handleBlur} value={props.values.name} onChange={props.handleChange} type='text' className='rounded-full border-2 max-w-full border-gray-500 bg-transparent py-2 px-4 text-gray-300 focus-visible:outline-none' id='name' name='name' placeholder='Nome'/>
+                      <input onBlur={props.handleBlur} value={props.values.surname} onChange={props.handleChange} type='text' className='rounded-full border-2 max-w-full border-gray-500 bg-transparent py-2 px-4 text-gray-300 focus-visible:outline-none' id='surname' name='surname' placeholder='Cognome'/>
+                    </div>
 
-                {/* credit number */}
-                <div className='form-group mb-8'>
-                  <input type='number' className='rounded-full border-2 w-full border-gray-500 bg-transparent py-2 px-4 text-gray-300 focus-visible:outline-none' id='card' name='card' placeholder='Numero carta di credito' required/>
-                </div>
+                    {/* credit number */}
+                    <div className='form-group mb-8'>
+                      <input onBlur={props.handleBlur} onChange={props.handleChange} value={props.values.card} type='text' className='rounded-full border-2 w-full border-gray-500 bg-transparent py-2 px-4 text-gray-300 focus-visible:outline-none' id='card' name='card' placeholder='Numero carta di credito'/>
+                    </div>
 
-                {/* address, n address, cap */}
-                <div className='form-group grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8'>
-                  <input type='text' className='rounded-full border-2 max-w-full border-gray-500 bg-transparent py-2 px-4 text-gray-300 focus-visible:outline-none' id='address' name='address' placeholder='Indirizzo' required/>
-                  <input type='number' className='rounded-full border-2 max-w-full border-gray-500 bg-transparent py-2 px-4 text-gray-300 focus-visible:outline-none' id='civic' name='civic' placeholder='N° Civico' required/>
-                  <input type='number' className='rounded-full border-2 max-w-full border-gray-500 bg-transparent py-2 px-4 text-gray-300 focus-visible:outline-none' id='cap' name='cap' placeholder='CAP' required/>
-                </div>
+                    {/* address, n address, cap */}
+                    <div className='form-group grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8'>
+                      <input onBlur={props.handleBlur} onChange={props.handleChange} value={props.values.address} type='text' className='rounded-full border-2 max-w-full border-gray-500 bg-transparent py-2 px-4 text-gray-300 focus-visible:outline-none' id='address' name='address' placeholder='Indirizzo'/>
+                      <input onBlur={props.handleBlur} onChange={props.handleChange} value={props.values.civic} type='text' className='rounded-full border-2 max-w-full border-gray-500 bg-transparent py-2 px-4 text-gray-300 focus-visible:outline-none' id='civic' name='civic' placeholder='N° Civico'/>
+                      <input onBlur={props.handleBlur} onChange={props.handleChange} value={props.values.cap} type='text' className='rounded-full border-2 max-w-full border-gray-500 bg-transparent py-2 px-4 text-gray-300 focus-visible:outline-none' id='cap' name='cap' placeholder='CAP'/>
+                    </div>
 
-                {/* total nd btn submit */}
-                <div className='detail-submit flex items-center justify-between flex-wrap gap-4'>
-                  <h4 className='font-bold text-2xl'>{total} &euro;</h4>
+                    {/* errors */}
+                    {props.errors.name && <div id="feedback">{props.errors.name}</div>}
 
-                  {/* submit */}
-                  <button className='rounded-full bg-gray-300 py-2 px-6 font-bold text-black hover:bg-gray-400 duration-300' type='submit'>
-                    Procedi all'acquisto
-                  </button>
-                </div>
-              </form>
+                    {/* total nd btn submit */}
+                    <div className='detail-submit flex items-center justify-between flex-wrap gap-4'>
+                      <h4 className='font-bold text-2xl'>{total} &euro;</h4>
+
+                      {/* submit */}
+                      <button className='rounded-full bg-gray-300 py-2 px-6 font-bold text-black hover:bg-gray-400 duration-300' type='submit'>
+                        Procedi all'acquisto
+                      </button>
+                    </div>
+                  </form>
+                )}
+              </Formik>
             </div>
           </div>
         ) : (
