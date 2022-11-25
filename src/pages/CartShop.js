@@ -18,6 +18,9 @@ import { removeToCart, removeAllToCart } from '../redux/reducers/cart';
 // import formik
 import {Formik} from 'formik';
 
+// import all yup
+import * as Yup from 'yup';
+
 function CartShop() {
   // use title custom hook
   useTitle('Carrello');
@@ -37,6 +40,39 @@ function CartShop() {
     civic: '',
     cap: '',
   }
+
+  // validation schema form yup
+  const validationSchema = Yup.object({
+    name: Yup.string()
+      .min(3, 'Il Nome deve essere composto da almeno 3 caratteri')
+      .max(25, 'Il nome può contenere massimo 25 caratteri')
+      .required('Il campo Nome è richiesto')
+      .matches(/^[a-zA-Z\s]*$/, 'Il Nome può contenere solo lettere e spazi'),
+
+    surname: Yup.string()
+      .min(3, 'Il Cognome deve essere composto da almeno 3 caratteri')
+      .max(25, 'Il nome può contenere massimo 25 caratteri')
+      .required('Il campo Cognome è richiesto')
+      .matches(/^[a-zA-Z\s]*$/, 'Il Cognome può contenere solo lettere e spazi'),
+
+    card: Yup.string()
+      .required('Il campo n° carta di credito è richiesto'),
+
+    address: Yup.string()
+      .min(3, "L'indirizzo deve essere composto da almeno 3 caratteri")
+      .max(255, "L'indirizzo può contenere massimo 255 caratteri")
+      .required('Il campo Indirizzo è richiesto')
+      .matches(/^[a-zA-Z\s]*$/, "L'indirizzo può contenere solo lettere e spazi"),
+
+    civic: Yup.string()
+      .required('Il campo n° civico è richiesto'),
+
+    cap: Yup.string()
+      .required('Il campo Cap è richiesto')
+      .min(5, 'Il Cap deve essere composto da 5 caratteri numerici')
+      .max(5, 'Il Cap può contenere solo 5 caratteri numerici')
+      .matches(/^[0-9]{5}$/, 'Inserire un CAP Italiano')
+  });
 
   return (
     <section id='cart-shop'>
@@ -88,36 +124,58 @@ function CartShop() {
               {/* form */}
               <Formik
                 initialValues={form}
+                validationSchema={validationSchema}
                 onSubmit={(values, actions) => {
                   setTimeout(() => {
                     alert(JSON.stringify(values, null, 2));
-                    actions.setSubmitting(true);
+                    actions.setSubmitting(false);
                     actions.resetForm(form);
                   }, 500);
                 }}
               >
                 {props => (
                   <form onSubmit={props.handleSubmit}>
-                    {/* Name */}
+                    {/* Name surname */}
                     <div className='form-group grid grid-cols-1 md:grid-cols-2 gap-6 mb-8'>
-                      <input onBlur={props.handleBlur} value={props.values.name} onChange={props.handleChange} type='text' className='rounded-full border-2 max-w-full border-gray-500 bg-transparent py-2 px-4 text-gray-300 focus-visible:outline-none' id='name' name='name' placeholder='Nome'/>
-                      <input onBlur={props.handleBlur} value={props.values.surname} onChange={props.handleChange} type='text' className='rounded-full border-2 max-w-full border-gray-500 bg-transparent py-2 px-4 text-gray-300 focus-visible:outline-none' id='surname' name='surname' placeholder='Cognome'/>
+                      {/* name */}
+                      <div className='name'>
+                        <input onBlur={props.handleBlur} value={props.values.name} onChange={props.handleChange} type='text' className={`${props.errors.name ? 'border-red-500' : ''} w-full rounded-full border-2 border-gray-500 bg-transparent py-2 px-4 text-gray-300 focus-visible:outline-none`} id='name' name='name' placeholder='Nome'/>
+                        {props.errors.name && <p id="feedback" className='text-sm text-red-500 mt-2'>{props.errors.name}</p>}
+                      </div>
+
+                      {/* surname */}
+                      <div className='surname'>
+                        <input onBlur={props.handleBlur} value={props.values.surname} onChange={props.handleChange} type='text' className={`${props.errors.surname ? 'border-red-500' : ''} w-full rounded-full border-2 border-gray-500 bg-transparent py-2 px-4 text-gray-300 focus-visible:outline-none`} id='surname' name='surname' placeholder='Cognome'/>
+                        {props.errors.surname && <p id="feedback" className='text-sm text-red-500 mt-2'>{props.errors.surname}</p>}
+                      </div>
                     </div>
 
                     {/* credit number */}
                     <div className='form-group mb-8'>
-                      <input onBlur={props.handleBlur} onChange={props.handleChange} value={props.values.card} type='text' className='rounded-full border-2 w-full border-gray-500 bg-transparent py-2 px-4 text-gray-300 focus-visible:outline-none' id='card' name='card' placeholder='Numero carta di credito'/>
+                      <input onBlur={props.handleBlur} onChange={props.handleChange} value={props.values.card} type='text' className={`${props.errors.card ? 'border-red-500' : ''} rounded-full border-2 w-full border-gray-500 bg-transparent py-2 px-4 text-gray-300 focus-visible:outline-none`} id='card' name='card' placeholder='Numero carta di credito'/>
+                      {props.errors.card && <p id="feedback" className='text-sm text-red-500 mt-2'>{props.errors.card}</p>}
                     </div>
 
                     {/* address, n address, cap */}
                     <div className='form-group grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8'>
-                      <input onBlur={props.handleBlur} onChange={props.handleChange} value={props.values.address} type='text' className='rounded-full border-2 max-w-full border-gray-500 bg-transparent py-2 px-4 text-gray-300 focus-visible:outline-none' id='address' name='address' placeholder='Indirizzo'/>
-                      <input onBlur={props.handleBlur} onChange={props.handleChange} value={props.values.civic} type='text' className='rounded-full border-2 max-w-full border-gray-500 bg-transparent py-2 px-4 text-gray-300 focus-visible:outline-none' id='civic' name='civic' placeholder='N° Civico'/>
-                      <input onBlur={props.handleBlur} onChange={props.handleChange} value={props.values.cap} type='text' className='rounded-full border-2 max-w-full border-gray-500 bg-transparent py-2 px-4 text-gray-300 focus-visible:outline-none' id='cap' name='cap' placeholder='CAP'/>
-                    </div>
+                      {/* address */}
+                      <div className='address'>
+                        <input onBlur={props.handleBlur} onChange={props.handleChange} value={props.values.address} type='text' className={`${props.errors.address ? 'border-red-500' : ''} rounded-full border-2 max-w-full border-gray-500 bg-transparent py-2 px-4 text-gray-300 focus-visible:outline-none`} id='address' name='address' placeholder='Indirizzo'/>
+                        {props.errors.address && <p id="feedback" className='text-sm text-red-500 mt-2'>{props.errors.address}</p>}
+                      </div>
 
-                    {/* errors */}
-                    {props.errors.name && <div id="feedback">{props.errors.name}</div>}
+                      {/* civic */}
+                      <div className='civic'>
+                        <input onBlur={props.handleBlur} onChange={props.handleChange} value={props.values.civic} type='text' className={`${props.errors.civic ? 'border-red-500' : ''} rounded-full border-2 max-w-full border-gray-500 bg-transparent py-2 px-4 text-gray-300 focus-visible:outline-none`} id='civic' name='civic' placeholder='N° Civico'/>
+                        {props.errors.civic && <p id="feedback" className='text-sm text-red-500 mt-2'>{props.errors.civic}</p>}
+                      </div>
+                      
+                      {/* cap */}
+                      <div className='cap'>
+                        <input onBlur={props.handleBlur} onChange={props.handleChange} value={props.values.cap} type='text' className={`${props.errors.cap ? 'border-red-500' : ''} rounded-full border-2 max-w-full border-gray-500 bg-transparent py-2 px-4 text-gray-300 focus-visible:outline-none`} id='cap' name='cap' placeholder='CAP'/>
+                        {props.errors.cap && <p id="feedback" className='text-sm text-red-500 mt-2'>{props.errors.cap}</p>}
+                      </div>
+                    </div>
 
                     {/* total nd btn submit */}
                     <div className='detail-submit flex items-center justify-between flex-wrap gap-4'>
