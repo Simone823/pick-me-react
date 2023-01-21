@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 
 // import trash icon 
 import { IoIosTrash } from 'react-icons/io';
@@ -73,6 +73,11 @@ function CartShop() {
       .max(5, 'Il Cap può contenere solo 5 caratteri numerici')
       .matches(/^[0-9]{5}$/, 'Inserire un CAP Italiano')
   });
+
+  // useeffect one render scroll top
+  useEffect(()=> {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <section id='cart-shop'>

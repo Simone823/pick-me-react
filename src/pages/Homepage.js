@@ -57,10 +57,20 @@ function Homepage() {
         // fecth photos
         fecthPhotos();
     }
+    
+    // scroll top ref
+    const scrollTop = useRef(null);
 
     // prev page
     const prevPage = () => {
         if(pagination.currentPage - 1 !== 0) {
+            // window scroll ref current
+            scrollTop.current.scrollIntoView({
+                top: scrollTop.offsetTop,
+                left: 0,
+                behavior: "smooth",
+            });
+
             fecthPhotos(pagination.currentPage - 1);
         } else {
             return;
@@ -70,27 +80,22 @@ function Homepage() {
     // next page
     const nextPage = () => {
         if(pagination.currentPage + 1 <= pagination.total_pages) {
+            // window scroll ref current
+            scrollTop.current.scrollIntoView({
+                top: scrollTop.offsetTop,
+                left: 0,
+                behavior: "smooth",
+            });
+
             fecthPhotos(pagination.currentPage + 1);
         } else {
             return;
         }
     }
 
-    // scroll top ref
-    const scrollTop = useRef(null);
-
-    // hadle scroll top
-    const handleScrollTop = () => {
-        if(scrollTop == null) {
-            return;
-        }
-
-        // window scroll ref current
-        scrollTop.current.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
-    }
-
     // useeffect one render feth data
     useEffect(()=> {
+        window.scrollTo(0, 0);
         fecthPhotos();
     }, []);
 
@@ -132,10 +137,10 @@ function Homepage() {
                         {pagination.total_pages > 0 ? (
                             < div className={`pagination flex items-center ${pagination.currentPage === 1 ? 'justify-end' : 'justify-between'} mt-10`}>
                                 {/* prev */}
-                                <button onClick={() => { prevPage(); handleScrollTop() }} className={`${pagination.currentPage > 1 ? 'block' : 'hidden'} rounded-full py-2 px-3 border-2 border-pink-500 text-pink-500 hover:border-violet-500 hover:text-violet-500 duration-300`} type='button'>Indietro</button>
+                                <button onClick={() => prevPage()} className={`${pagination.currentPage > 1 ? 'block' : 'hidden'} rounded-full py-2 px-3 border-2 border-pink-500 text-pink-500 hover:border-violet-500 hover:text-violet-500 duration-300`} type='button'>Indietro</button>
 
                                 {/* next */}
-                                <button onClick={() => { nextPage(); handleScrollTop() }} className={`${pagination.currentPage === pagination.total_pages ? 'hidden' : ''} rounded-full py-2 px-3 border-2 border-pink-500 text-pink-500 hover:border-violet-500 hover:text-violet-500 duration-300`} type='button'>Avanti</button>
+                                <button onClick={() => nextPage()} className={`${pagination.currentPage === pagination.total_pages ? 'hidden' : ''} rounded-full py-2 px-3 border-2 border-pink-500 text-pink-500 hover:border-violet-500 hover:text-violet-500 duration-300`} type='button'>Avanti</button>
                             </div>
                         ) : ''}
                     </>
